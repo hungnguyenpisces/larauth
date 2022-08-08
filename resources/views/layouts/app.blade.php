@@ -43,9 +43,9 @@
                         @can('role-list')
                         <li><a class="nav-link" href="{{ route('roles.index') }}">Manage Role</a></li>
                         @endcan
-                        @if(auth()->user()->can('permission-list'))
+                        @role('Super-Admin|Admin')
                         <li><a class="nav-link" href="{{ route('permissions.index') }}">Manage Permissions</a></li>
-                        @endif
+                        @endrole
                         <li class="nav-item dropdown">
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                 {{ Auth::user()->name }} <span class="caret"></span>

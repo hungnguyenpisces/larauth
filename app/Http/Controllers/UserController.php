@@ -67,7 +67,9 @@ class UserController extends Controller
 
     public function show($id)
     {
-        return redirect()->route('users.index');
+        $user = User::find($id);
+        $permissionNames = $user->getPermissionNames();
+        return view('users.show', compact('user', 'permissionNames'));
     }
 
     public function edit($id)

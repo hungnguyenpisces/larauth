@@ -11,6 +11,7 @@ use PhpParser\Node\Stmt\TryCatch;
 
 
 use DB;
+use Illuminate\Support\Facades\Auth;
 
 class PermissionController extends Controller
 {
@@ -28,7 +29,7 @@ class PermissionController extends Controller
      */
     public function index(Request $request)
     {
-        $permissions = Permission::orderBy('id', 'DESC')->paginate(5);
+        $permissions = Permission::orderBy('id', 'DESC')->paginate(7);
         return view('permissions.index', compact('permissions'));
     }
 
@@ -55,19 +56,18 @@ class PermissionController extends Controller
         $this->validate($request, [
             'name' => 'required|unique:permissions',
         ]);
-        Permission::Create(
-            [
-                'name' => $request->name,
-            ]
-        );
 
-        $notification = array(
-            'message' => 'Permission added successfully',
-            'alert-type' => 'success'
-        );
+        if (Auth::user()->hasRole('Super-Admin')) {
+            $permission = Permission::create(['name' => $request->input('name')]);
+            $permission->assignRole('Super-Admin');
+            $request->session()->flash('success', 'Permission created successfully');
+            return redirect()->route('permissions.index');
+        } else {
+            $request->session()->flash('error', 'You do not have permission to create permission');
+            return redirect()->route('permissions.index');
+        }
 
-        return redirect()->route('permissions.index')
-            ->with($notification);
+        return redirect('/403');
     }
 
     /**

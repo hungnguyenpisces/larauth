@@ -8,7 +8,7 @@
         <div class="card-header">
             <h2 class="card-title">Permission Management</h2>
             <div class="card-tools">
-                @role('Super-Admin')
+                @role('Super-Admin|Admin')
                 <button type="button" class="btn btn-success btn-create" data-toggle="modal" data-target="#PermissionModal">
                     Add Permission
                 </button>
@@ -33,9 +33,7 @@
                         <td>{{ $permission->name }}</td>
                         <td>
                             <form action="{{ route('permissions.destroy',$permission->id) }}" method="POST">
-                                <a class="btn btn-info btn-sm" href="{{ route('permissions.show',$permission->id) }}">Show</a>
                                 @role('Super-Admin')
-                                <a class="btn btn-primary btn-sm" href="{{ route('permissions.edit',$permission->id) }}">Edit</a>
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>

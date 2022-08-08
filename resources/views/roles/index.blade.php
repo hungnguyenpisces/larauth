@@ -13,15 +13,22 @@
             <table class="table table-striped table-bordered">
                 <tr class="bg-blue text-center">
                     <th width="50px">No</th>
-                    <th>Name</th>
+                    <th width="250px">Name</th>
+                    <th>Permissions</th>
                     <th width="200px">Action</th>
                 </tr>
                 @foreach ($roles as $key => $role)
                 <tr>
                     <td class="text-center">{{ ++$key }}</td>
                     <td class="text-center">{{ $role->name }}</td>
+                    <td>
+                        @if(!empty($role->permissions))
+                        @foreach($role->permissions as $v)
+                        <label class="label label-success">{{ $v->name }},</label>
+                        @endforeach
+                        @endif
+                    </td>
                     <td class="text-center">
-
                         <form action="{{ route('roles.destroy',$role->id) }}" method="POST">
                             <a class="btn btn-sm btn-info" href="{{ route('roles.show',$role->id) }}">Show</a>
                             @can('role-edit')
