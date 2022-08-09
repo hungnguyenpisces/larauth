@@ -66,7 +66,6 @@ class PermissionController extends Controller
             $request->session()->flash('error', 'You do not have permission to create permission');
             return redirect()->route('permissions.index');
         }
-
         return redirect('/403');
     }
 
@@ -87,31 +86,22 @@ class PermissionController extends Controller
         return redirect()->route('permissions.index');
     }
 
-    public function update(Request $request, $id)
+    public function update()
     {
-        $this->validate($request, [
-            'name' => [
-                'required',
-                Rule::unique('permissions', 'name')->ignore($id)
-            ]
-        ]);
-        $permission = Permission::find($id);
-        $permission->name = $request->name;
-        $permission->save();
-
-        return redirect()->route('permissions.index')
-            ->with('success', 'Permission updated successfully');
+        return redirect()->route('permissions.index');
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        DB::table("permissions")->where('id', $id)->delete();
-
-        $notification = array(
-            'message' => 'Permissions deleted successfully',
-            'alert-type' => 'success'
-        );
-        return redirect()->route('permissions.index')
-            ->with($notification);
+        $permission = Permission::findOrFail($id);
+        if (Auth::user()->hasRole('Super-Admin')) {
+            $permission->delete();
+            $request->session()->flash('success', 'Permission deleted successfully');
+            return redirect()->route('permissions.index');
+        } else {
+            $request->session()->flash('error', 'You do not have permission to delete permission');
+            return redirect()->route('permissions.index');
+        }
+        return redirect('/403');
     }
 }

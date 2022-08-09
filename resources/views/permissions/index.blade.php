@@ -6,15 +6,27 @@
 <div class="col-md-12">
     <div class="card">
         <div class="card-header">
-            <h2 class="card-title">Permission Management</h2>
-            <div class="card-tools">
-                @role('Super-Admin|Admin')
-                <button type="button" class="btn btn-success btn-create" data-toggle="modal" data-target="#PermissionModal">
-                    Add Permission
-                </button>
-                @endrole
+            <div class="row">
+                <div class="col-6">
+                    <h2 class="card-title">Permission Management</h2>
+                    <div class="card-tools">
+                        @role('Super-Admin')
+                        <button type="button" class="btn btn-success btn-create" data-toggle="modal" data-target="#PermissionModal">
+                            Add Permission
+                        </button>
+                        @endrole
+                    </div>
+                </div>
+                <div class="col-6 text-center">
+                    @foreach(['danger', 'success', 'warning', 'info'] as $type)
+                    @if(Session::has($type))
+                    <p class="alert alert-{{$type}}">
+                        {{Session::get($type)}}
+                    </p>
+                    @endif
+                    @endforeach
+                </div>
             </div>
-
         </div>
         <!-- /.card-header -->
         <div class="card-body table-responsive">
